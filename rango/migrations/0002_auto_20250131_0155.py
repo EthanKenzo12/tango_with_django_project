@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('DjangoApp', '0001_initial'),
+        ('rango', '0001_initial'),
     ]
 
     operations = [

@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rango import views
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('', include('DjangoApp.urls')) # Included DjangoApp's url
+    path('rango/', include('rango.urls')) # Included rango's url
 ]
 
 if settings.DEBUG:
