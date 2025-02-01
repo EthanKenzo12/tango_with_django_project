@@ -46,8 +46,8 @@ def populate():
             print(f'- {c.name}: {p.title}')
 
 
-def add_page(cat, title, url, views=0):
-    p = Page.objects.get_or_create(category=cat, title=title)[0]
+def add_page(cat, title, url, views=50):
+    p, created = Page.objects.get_or_create(category=cat, title=title)
     p.url = url
     p.views = views
     p.save()
