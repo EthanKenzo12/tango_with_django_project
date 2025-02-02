@@ -129,6 +129,9 @@ STATICFILES_DIRS = [STATIC_DIR,]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
+LOGIN_URL = '/rango/login/'
+LOGIN_REDIRECT_URL = '/rango/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

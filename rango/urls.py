@@ -11,4 +11,8 @@ urlpatterns = [
     path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
     path('upload/', views.upload_image, name='upload'), # Image upload route
     path('gallery/', views.gallery, name='gallery'), # Image gallery route
+    path('register/', views.register, name='register'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('restricted/', views.restricted, name='restricted'),
 ]

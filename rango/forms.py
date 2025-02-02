@@ -1,12 +1,14 @@
 from django import forms
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from .models import ImageUpload
+from django.contrib.auth.models import User
 
 
 class ImageUploadForm(forms.ModelForm):
     class Meta:
         model = ImageUpload
         fields = ['title', 'image']
+
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length=128, help_text="Please enter the category name.")
@@ -18,6 +20,7 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ('name',)
 
+
 class PageForm(forms.ModelForm):
     title = forms.CharField(max_length=128, help_text="Please enter the title of the page")
     url = forms.URLField(max_length=200, help_text="Please enter the URL of the page")
@@ -26,3 +29,17 @@ class PageForm(forms.ModelForm):
     class Meta:
         model = Page
         exclude = ('category',)
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture')
