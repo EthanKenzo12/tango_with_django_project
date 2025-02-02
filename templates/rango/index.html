@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-
+{% extends 'rango/base.html' %}
 {% load static %}
 
-<html>
-<head>
-    <title>Rango</title>
-</head>
-<body>
+{% block title_block %}
+    Homepage
+{% endblock %}
+
+{% block content %}
     <h1>Rango says...</h1>
 
     {% if user.is_authenticated %}
@@ -16,6 +15,7 @@
     {% endif %}
 
     <p><a href="{% url 'rango:add_category' %}">Add a New Category</a><br /></p>
+
     <div>
         Hey there partner! <br />
         <strong>{{ boldmessage }}</strong><br />
@@ -52,9 +52,7 @@
     </div>
 
     <div>
-        <a href="/rango/about/">About</a><br />
-        <img src="{% static 'images/rango.jpg' %}"
-            alt="Picture of Rango" />
+        <a href="{% url 'rango:about' %}">About</a><br />
+        <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
     </div>
-</body>
-</html>
+{% endblock %}

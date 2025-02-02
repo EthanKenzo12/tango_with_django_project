@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load static %}
 
-<html>
-<head>
-    <title>{{ category.name }}</title>
-</head>
-<body>
+{% block title_block %}
+    {% if category %}{{ category.name }}{% else %}Unknown Category{% endif %}
+{% endblock %}
+
+{% block content %}
     {% if category %}
         <h1>{{ category.name }}</h1>
         <h2>Pages in this Category:</h2>
@@ -29,6 +29,5 @@
         <p><strong>The specified category does not exist.</strong></p>
     {% endif %}
 
-    <p><a href="{% url 'rango:index' %}">Home</a></p>
-</body>
-</html>
+    <p><a href="{% url 'rango:index' %}">Return to Homepage</a></p>
+{% endblock %}
