@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Upload Image</title>
-</head>
-<body>
-    <h1>Please upload an image</h1>
-    <form method = POST enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Upload</button>
-    </form>
-    <a href="{% url 'gallery' %}">View Gallery</a>
-</body>
-</html>
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+    Image Gallery
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Uploaded Images</h1>
+        {% for img in images %}
+            <div>
+                <h3>{{ img.title }}</h3>
+                <img src="{{ img.image.url }}" width="300">
+            </div>
+        {% empty %}
+            <p>No images uploaded yet.</p>
+        {% endfor %}
+        <a href="{% url 'upload' %}">Upload Another Image</a>
+    {% else %}
+        <p>You must be <a href="{% url 'rango:login' %}">logged in</a> to view the gallery.</p>
+    {% endif %}
+{% endblock %}

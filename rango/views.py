@@ -52,6 +52,7 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context_dict)
 
 
+@login_required
 def upload_image(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
@@ -64,6 +65,7 @@ def upload_image(request):
     return render(request, 'rango/upload.html', {'form': form})
 
 
+@login_required
 def gallery(request):
     images = ImageUpload.objects.all()
     return render(request, 'rango/gallery.html', {'images': images})
