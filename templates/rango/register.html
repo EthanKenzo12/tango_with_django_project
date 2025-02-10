@@ -1,20 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Please enter the following details</title>
-</head>
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+    Register
+{% endblock %}
+
+{% block content %}
 <body>
-    <h1>Register</h1>
+    <h1>Register for Rango</h1>
+
+    <p>Rango says: <strong>register here!</strong></p>
     {% if registered %}
         <p>Registration successful! <a href="{% url 'rango:login' %}">Login here</a>.</p>
     {% else %}
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" action="{% url 'rango:register' %}">
             {% csrf_token %}
             {{ user_form.as_p }}
             {{ profile_form.as_p }}
             <input type="submit" value="Register">
         </form>
     {% endif %}
-</body>
-</html>
+{% endblock %}

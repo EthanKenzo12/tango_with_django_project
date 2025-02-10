@@ -6,6 +6,7 @@ from django.urls import reverse
 from rango.forms import PageForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 
 # Create your views here.
@@ -13,9 +14,21 @@ def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
+    visits = request.session.get('visits', 0)
+    last_visit = request.session.get('last_visit')
+
+    if last_visit:
+        last_visit_time = datetime.strptime(last_visit, '%Y-%m-%d %H:%M:%S.%f')
+    else:
+        last_visit_time = None
+    if not last_visit_time or (datetime.now() - last_visit_time).days > 0:
+        visits += 1
+        request.session['visits'] = visits
+        request.session['last_visit'] = str(datetime.now())
     context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!',
                     'categories': category_list,
-                    'pages': page_list, }
+                    'pages': page_list,
+                    'visits': visits}
     return render(request, 'rango/index.html', context=context_dict)
 
 
@@ -56,6 +69,7 @@ def gallery(request):
     return render(request, 'rango/gallery.html', {'images': images})
 
 
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -70,6 +84,7 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form': form})
 
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)

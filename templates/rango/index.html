@@ -9,13 +9,15 @@
     <h1>Rango says...</h1>
 
     {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }}! <a href="{% url 'rango:logout' %}">Logout</a></p>
+        <p>Howdy {{ user.username }}! <a href="{% url 'rango:logout' %}">Logout</a></p>
+        <p><a href="{% url 'rango:restricted' %}">Restricted Page</a></p>
     {% else %}
         <p><a href="{% url 'rango:login' %}">Login</a> | <a href="{% url 'rango:register' %}">Register</a></p>
     {% endif %}
-
-    <p><a href="{% url 'rango:add_category' %}">Add a New Category</a><br /></p>
-
+    <p>You have visited this site {{ visits }} times.</p>
+    {% if user.is_authenticated %}
+        <p><a href="{% url 'rango:add_category' %}">Add a New Category</a><br /></p>
+    {% endif %}
     <div>
         Hey there partner! <br />
         <strong>{{ boldmessage }}</strong><br />
