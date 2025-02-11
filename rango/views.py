@@ -14,26 +14,43 @@ def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
-    visits = request.session.get('visits', 0)
-    last_visit = request.session.get('last_visit')
-
-    if last_visit:
-        last_visit_time = datetime.strptime(last_visit, '%Y-%m-%d %H:%M:%S.%f')
-    else:
-        last_visit_time = None
-    if not last_visit_time or (datetime.now() - last_visit_time).days > 0:
-        visits += 1
-        request.session['visits'] = visits
-        request.session['last_visit'] = str(datetime.now())
     context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!',
                     'categories': category_list,
-                    'pages': page_list,
-                    'visits': visits}
-    return render(request, 'rango/index.html', context=context_dict)
+                    'pages': page_list}
+
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
+
+    response = render(request, 'rango/index.html', context=context_dict)
+    return response
 
 
 def about(request):
+    if request.session.test_cookie_worked():
+        print("TEST COOKIE WORKED!")
+        request.session.delete_test_cookie()
     return render(request, 'rango/about.html')
+
+
+def get_server_side_cookie(request, cookie, default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+
+def visitor_cookie_handler(request):
+    visits = int(request.COOKIES.get('visits', '1'))
+    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:7], '%Y-%m-%d %H:%M:%S')
+
+    if (datetime.now() - last_visit_time).days > 0:
+        visits += 1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_cookie
+
+    request.session['visits'] = visits
 
 
 def show_category(request, category_name_slug):
@@ -126,8 +143,11 @@ def register(request):
 
             profile = profile_form.save(commit=False)
             profile.user = user
-            profile.save()
 
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
             registered = True
         else:
             print(user_form.errors, profile_form.errors)
@@ -136,8 +156,14 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
 
+    if request.seesion.test_cookie_worked():
+        print(">>> TEST COOKIE WORKED!")
+        request.session.delete_test_cookie()
+
     return render(request, 'rango/register.html',
-                  {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+                  {'user_form': user_form,
+                   'profile_form': profile_form,
+                   'registered': registered})
 
 
 def user_login(request):
