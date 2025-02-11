@@ -19,17 +19,13 @@ def index(request):
                     'pages': page_list}
 
     visitor_cookie_handler(request)
-    context_dict['visits'] = request.session['visits']
 
-    response = render(request, 'rango/index.html', context=context_dict)
-    return response
+    return render(request, 'rango/index.html', context=context_dict)
 
 
 def about(request):
-    if request.session.test_cookie_worked():
-        print("TEST COOKIE WORKED!")
-        request.session.delete_test_cookie()
-    return render(request, 'rango/about.html')
+    visits = request.session.get('visits', 1)
+    return render(request, 'rango/about.html', {'visits': visits})
 
 
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -40,15 +36,15 @@ def get_server_side_cookie(request, cookie, default_val=None):
 
 
 def visitor_cookie_handler(request):
-    visits = int(request.COOKIES.get('visits', '1'))
-    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
-    last_visit_time = datetime.strptime(last_visit_cookie[:7], '%Y-%m-%d %H:%M:%S')
+    visits = int(request.session.get('visits', 0))
+    last_visit_str = request.session.get('last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_str, '%Y-%m-%d %H:%M:%S.%f')
 
     if (datetime.now() - last_visit_time).days > 0:
         visits += 1
         request.session['last_visit'] = str(datetime.now())
     else:
-        request.session['last_visit'] = last_visit_cookie
+        request.session['last_visit'] = last_visit_str
 
     request.session['visits'] = visits
 
