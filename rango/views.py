@@ -36,7 +36,7 @@ def get_server_side_cookie(request, cookie, default_val=None):
 
 
 def visitor_cookie_handler(request):
-    visits = int(request.session.get('visits', 0))
+    visits = int(request.session.get('visits', 1))
     last_visit_str = request.session.get('last_visit', str(datetime.now()))
     last_visit_time = datetime.strptime(last_visit_str, '%Y-%m-%d %H:%M:%S.%f')
 
